@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.solanodouglas.wl.model.Colaborador;
+import com.solanodouglas.wl.repository.ColaboradorRepository;
 import com.solanodouglas.wl.service.ColaboradorService;
 
 @RestController
@@ -24,6 +25,9 @@ public class ColaboradorController {
 
 	@Autowired
 	private ColaboradorService service;
+	
+	@Autowired
+	private ColaboradorRepository repository;
 	
 	
 	@GetMapping

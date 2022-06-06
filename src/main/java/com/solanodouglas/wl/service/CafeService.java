@@ -30,7 +30,11 @@ public class CafeService {
 	}	
 	
 	public Cafe insert(Cafe cafe) {
-		return repository.save(cafe);
+		if (repository.findbyCafe(cafe.getCafe()) == null) {
+			return repository.save(cafe);
+		} else {
+			throw new DatabaseException("Este café já foi escolhido por um colaborador.");
+		}
 	}
 	
 	public void delete(Long id) {

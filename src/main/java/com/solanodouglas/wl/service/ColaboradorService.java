@@ -30,10 +30,14 @@ public class ColaboradorService {
 	}
 		
 	public Colaborador insert(Colaborador colab) {
-		try {
-			return repository.save(colab);
-		} catch (ConstraintViolationException e) {
-			throw new DatabaseException(e.getMessage());
+		if (repository.findByCpf(colab.getCpf()) == null) {
+			try {
+				return repository.save(colab);
+			} catch (ConstraintViolationException e) {
+				throw new DatabaseException(e.getMessage());
+			}
+		} else {
+			throw new DatabaseException("CPF informado já esta em uso");
 		}
 	}
 	
