@@ -30,7 +30,11 @@ public class ColaboradorService {
 	}
 		
 	public Colaborador insert(Colaborador colab) {
-		return repository.save(colab);
+		try {
+			return repository.save(colab);
+		} catch (ConstraintViolationException e) {
+			throw new DatabaseException(e.getMessage());
+		}
 	}
 	
 	public void delete(Long id) {
