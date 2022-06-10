@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages="com.solanodouglas.controller")
 @EntityScan(basePackages = "com.solanodouglas.wl.model")
 @ComponentScan(basePackages= {"com.*"})
 @EnableJpaRepositories(basePackages= {"com.solanodouglas.wl.repository"})
