@@ -1,28 +1,20 @@
 package com.solanodouglas.wl.controller;
 
-import java.net.URI;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.solanodouglas.wl.model.Cafe;
-import com.solanodouglas.wl.model.Colaborador;
 import com.solanodouglas.wl.repository.CafeRepository;
 import com.solanodouglas.wl.service.CafeService;
-import com.solanodouglas.wl.service.exceptions.DatabaseException;
 import com.solanodouglas.wl.service.exceptions.ModelNotFoundException;
 
 @Controller

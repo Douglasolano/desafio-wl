@@ -56,7 +56,7 @@
 							<tr th:each="cafe : ${cafes}">
 								<th class="col-1" scope="row" th:text="${cafe.getId()}">ID</th>
 								<td class="col-4" th:text="${cafe.nome}">Nome do Cafe</td>
-								<td class="col-4" th:text="${cafe.colaborador.id}">ID colaborador</td>
+								<td class="col-2" th:text="${cafe.colaborador.id}">ID colaborador</td>
 								<td class="col-4" th:text="${cafe.colaborador.nome}">Nome Colaborador</td>
 								<td class="col-4" th:text="${cafe.colaborador.cpf}">Cpf Colaborador</td>
 								<td class="col-1"><a
