@@ -19,7 +19,6 @@ import com.solanodouglas.wl.service.CafeService;
 import com.solanodouglas.wl.service.exceptions.ModelNotFoundException;
 
 @Controller
-@RequestMapping(value = "/cafes")
 public class CafeController {
 
 	@Autowired
@@ -28,7 +27,7 @@ public class CafeController {
 	@Autowired
 	private CafeRepository repository;
 	
-	@GetMapping()
+	@GetMapping("cafes")
 	public ModelAndView index() {
 		List<Cafe> cafes = service.findAll();
         ModelAndView mv = new ModelAndView("cafes/index");
@@ -36,13 +35,13 @@ public class CafeController {
 		return mv;
 	}
 	
-	@GetMapping("/new")
+	@GetMapping("/cafes/new")
 	public ModelAndView novo(Cafe cafe) {
 		ModelAndView mv = new ModelAndView("cafes/new");
 		return mv;
 	}
 	
-	@PostMapping()
+	@PostMapping("/cafes")
 	public ModelAndView insert(@Valid Cafe cafe, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			ModelAndView mv = new ModelAndView("cafes/new");
@@ -57,7 +56,7 @@ public class CafeController {
 		}
 	}
 	
-	@GetMapping("/{id}/delete")
+	@GetMapping("/cafes/{id}/delete")
 	public ModelAndView delete(@PathVariable Long id) {
 		ModelAndView mv = new ModelAndView("redirect:/cafes");
 		
