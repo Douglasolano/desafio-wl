@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.solanodouglas.wl.model.Cafe;
@@ -18,6 +19,7 @@ import com.solanodouglas.wl.service.CafeService;
 import com.solanodouglas.wl.service.exceptions.ModelNotFoundException;
 
 @Controller
+@RequestMapping(value = "/cafes")
 public class CafeController {
 
 	@Autowired
@@ -26,7 +28,7 @@ public class CafeController {
 	@Autowired
 	private CafeRepository repository;
 	
-	@GetMapping("/cafes")
+	@GetMapping()
 	public ModelAndView index() {
 		List<Cafe> cafes = service.findAll();
         ModelAndView mv = new ModelAndView("cafes/index");
@@ -34,13 +36,13 @@ public class CafeController {
 		return mv;
 	}
 	
-	@GetMapping("/cafes/new")
+	@GetMapping("/new")
 	public ModelAndView novo(Cafe cafe) {
 		ModelAndView mv = new ModelAndView("cafes/new");
 		return mv;
 	}
 	
-	@PostMapping("/cafes")
+	@PostMapping()
 	public ModelAndView insert(@Valid Cafe cafe, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			ModelAndView mv = new ModelAndView("cafes/new");
@@ -55,7 +57,7 @@ public class CafeController {
 		}
 	}
 	
-	@GetMapping("/cafes/{id}/delete")
+	@GetMapping("/{id}/delete")
 	public ModelAndView delete(@PathVariable Long id) {
 		ModelAndView mv = new ModelAndView("redirect:/cafes");
 		
