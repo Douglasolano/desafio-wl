@@ -10,12 +10,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.solanodouglas.wl.model.Cafe;
 import com.solanodouglas.wl.repository.CafeRepository;
 import com.solanodouglas.wl.service.CafeService;
+import com.solanodouglas.wl.service.exceptions.DatabaseException;
 import com.solanodouglas.wl.service.exceptions.ModelNotFoundException;
 
 @Controller
@@ -49,16 +49,16 @@ public class CafeController {
 		} else {
 			if (repository.findByNome(cafe.getNome()) == null) {
 				service.insert(cafe);
-				return new ModelAndView("redirect:cafes");
+				return new ModelAndView("redirect:/cafes");
 			} else {
-				return new ModelAndView("redirect:cafes");
+				return new ModelAndView("redirect:/cafes");
 			}
 		}
 	}
 	
 	@GetMapping("cafes/{id}/delete")
 	public ModelAndView delete(@PathVariable Long id) {
-		ModelAndView mv = new ModelAndView("redirect:cafes");
+		ModelAndView mv = new ModelAndView("redirect:/cafes");
 		
 		try {
 			service.delete(id);
@@ -66,6 +66,9 @@ public class CafeController {
 		}
 		catch (ModelNotFoundException e) {
 			mv.addObject("mensagem", "Cafe " + id + " não encontrado.");
+		} 
+		catch (DatabaseException e) {
+			mv.addObject("mensagem", "Cafe " + id + " não pode ser deletado por conter café(s) em seu nome");
 		}
 		return mv;
 	}
