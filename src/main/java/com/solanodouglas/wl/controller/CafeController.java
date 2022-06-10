@@ -35,13 +35,13 @@ public class CafeController {
 		return mv;
 	}
 	
-	@GetMapping("/cafes/new")
+	@GetMapping("cafes/new")
 	public ModelAndView novo(Cafe cafe) {
 		ModelAndView mv = new ModelAndView("cafes/new");
 		return mv;
 	}
 	
-	@PostMapping("/cafes")
+	@PostMapping("cafes")
 	public ModelAndView insert(@Valid Cafe cafe, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			ModelAndView mv = new ModelAndView("cafes/new");
@@ -49,16 +49,16 @@ public class CafeController {
 		} else {
 			if (repository.findByNome(cafe.getNome()) == null) {
 				service.insert(cafe);
-				return new ModelAndView("redirect:/cafes");
+				return new ModelAndView("redirect:cafes");
 			} else {
-				return new ModelAndView("redirect:/cafes");
+				return new ModelAndView("redirect:cafes");
 			}
 		}
 	}
 	
-	@GetMapping("/cafes/{id}/delete")
+	@GetMapping("cafes/{id}/delete")
 	public ModelAndView delete(@PathVariable Long id) {
-		ModelAndView mv = new ModelAndView("redirect:/cafes");
+		ModelAndView mv = new ModelAndView("redirect:cafes");
 		
 		try {
 			service.delete(id);
