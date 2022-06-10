@@ -1,26 +1,28 @@
 package com.solanodouglas.wl.controller;
 
-import java.net.URI;
 import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.solanodouglas.wl.model.Colaborador;
 import com.solanodouglas.wl.repository.ColaboradorRepository;
 import com.solanodouglas.wl.service.ColaboradorService;
+import com.solanodouglas.wl.service.exceptions.DatabaseException;
+import com.solanodouglas.wl.service.exceptions.ModelNotFoundException;
 
-@RestController
-@RequestMapping(value = "/colaboradores")
+@Controller
 public class ColaboradorController {
 
 	@Autowired
@@ -30,34 +32,66 @@ public class ColaboradorController {
 	private ColaboradorRepository repository;
 	
 	
-	@GetMapping
-	public ResponseEntity<List<Colaborador>> findAll() {
-		List<Colaborador> list = service.findAll();
-		return ResponseEntity.ok().body(list);
+	@GetMapping("/colaboradores")
+	public ModelAndView index() {
+		List<Colaborador> colaboradores = service.findAll();
+        ModelAndView mv = new ModelAndView("colaboradores/index");
+        mv.addObject("colaboradores", colaboradores);
+		return mv;
 	}
 	
-	@GetMapping(value = "/{id}")
-	public ResponseEntity<Colaborador> findById(@PathVariable Long id) {
-		Colaborador obj = service.findById(id);
-		return ResponseEntity.ok().body(obj);
+	@GetMapping("/colaboradores/new")
+	public ModelAndView novo(Colaborador colaborador) {
+		ModelAndView mv = new ModelAndView("colaboradores/new");
+		return mv;
 	}
 	
-	@PostMapping
-	public ResponseEntity<Colaborador> insert(@RequestBody Colaborador colab) {
-		colab = service.insert(colab);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(colab.getId()).toUri();
-		return ResponseEntity.created(uri).body(colab);
+	@PostMapping("/colaboradores")
+	public ModelAndView insert(@Valid Colaborador colaborador, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			ModelAndView mv = new ModelAndView("colaboradores/new");
+			return mv;
+		} else {
+			if (repository.findByCpf(colaborador.getCpf()) == null) {
+				repository.save(colaborador);
+				return new ModelAndView("redirect:/colaboradores");
+			} else {
+				return new ModelAndView("redirect:/colaboradores");
+			}
+		}
 	}
 	
-	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Long id) {
-		service.delete(id);
-		return ResponseEntity.noContent().build();
+	@GetMapping("/colaboradores/{id}")
+	public ModelAndView show(@PathVariable Long id) {
+		Optional<Colaborador> optional = repository.findById(id);
+		if (optional.isPresent()) {
+			Colaborador colaborador = optional.get();
+			
+			ModelAndView mv = new ModelAndView("colaboradores/show");
+			mv.addObject("colaborador", colaborador);
+			
+			return mv;
+		} else {
+			ModelAndView mv = new ModelAndView("redirect:/colaboradores");
+			mv.addObject("mensagem", "Colaborador " + id + " não encontrado.");
+			return mv;
+		}
 	}
 	
-	@PutMapping(value = "/{id}")
-	public ResponseEntity<Colaborador> update(@PathVariable Long id, @RequestBody Colaborador colab) {
-		colab = service.update(id, colab);
-		return ResponseEntity.ok().body(colab);
+	@GetMapping("/colaboradores/{id}/delete")
+	public ModelAndView delete(@PathVariable Long id) {
+		ModelAndView mv = new ModelAndView("redirect:/colaboradores");
+		
+		try {
+			service.delete(id);
+			mv.addObject("mensagem", "Colaborador " + id + " deletado com sucesso.");
+		}
+		catch (DatabaseException e) {
+			mv.addObject("mensagem", "Colaborador " + id + " não pode ser deletado por conter café(s) em seu nome");
+		}
+		catch (ModelNotFoundException e) {
+			mv.addObject("mensagem", "Colaborador " + id + " não encontrado.");
+		}
+		return mv;
 	}
 } 

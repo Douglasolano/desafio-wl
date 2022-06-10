@@ -3,57 +3,77 @@ package com.solanodouglas.wl.controller;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.solanodouglas.wl.model.Cafe;
 import com.solanodouglas.wl.model.Colaborador;
+import com.solanodouglas.wl.repository.CafeRepository;
 import com.solanodouglas.wl.service.CafeService;
+import com.solanodouglas.wl.service.exceptions.DatabaseException;
+import com.solanodouglas.wl.service.exceptions.ModelNotFoundException;
 
-@RestController
-@RequestMapping(value = "/cafes")
+@Controller
 public class CafeController {
 
 	@Autowired
 	private CafeService service;
 	
-	@GetMapping
-	public ResponseEntity<List<Cafe>> findAll() {
-		List<Cafe> list = service.findAll();
-		return ResponseEntity.ok().body(list);
+	@Autowired
+	private CafeRepository repository;
+	
+	@GetMapping("/cafes")
+	public ModelAndView index() {
+		List<Cafe> cafes = service.findAll();
+        ModelAndView mv = new ModelAndView("cafes/index");
+        mv.addObject("cafes", cafes);
+		return mv;
 	}
 	
-	@GetMapping(value = "/{id}")
-	public ResponseEntity<Cafe> findById(@PathVariable Long id) {
-		Cafe obj = service.findById(id);
-		return ResponseEntity.ok().body(obj);
+	@GetMapping("/cafes/new")
+	public ModelAndView novo(Cafe cafe) {
+		ModelAndView mv = new ModelAndView("cafes/new");
+		return mv;
 	}
 	
-	@PostMapping
-	public ResponseEntity<Cafe> insert(@RequestBody Cafe cafe) {
-		cafe = service.insert(cafe);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(cafe.getId()).toUri();
-		return ResponseEntity.created(uri).body(cafe);
+	@PostMapping("/cafes")
+	public ModelAndView insert(@Valid Cafe cafe, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			ModelAndView mv = new ModelAndView("cafes/new");
+			return mv;
+		} else {
+			if (repository.findByNome(cafe.getNome()) == null) {
+				service.insert(cafe);
+				return new ModelAndView("redirect:/cafes");
+			} else {
+				return new ModelAndView("redirect:/cafes");
+			}
+		}
 	}
 	
-	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Long id) {
-		service.delete(id);
-		return ResponseEntity.noContent().build();
-	}
-	
-	@PutMapping(value = "/{id}")
-	public ResponseEntity<Cafe> update(@PathVariable Long id, @RequestBody Cafe cafe, @RequestBody Colaborador colab) {
-		cafe = service.update(id, cafe, colab);
-		return ResponseEntity.ok().body(cafe);
+	@GetMapping("/cafes/{id}/delete")
+	public ModelAndView delete(@PathVariable Long id) {
+		ModelAndView mv = new ModelAndView("redirect:/cafes");
+		
+		try {
+			service.delete(id);
+			mv.addObject("mensagem", "Cafe " + id + " deletado com sucesso.");
+		}
+		catch (ModelNotFoundException e) {
+			mv.addObject("mensagem", "Cafe " + id + " não encontrado.");
+		}
+		return mv;
 	}
 }

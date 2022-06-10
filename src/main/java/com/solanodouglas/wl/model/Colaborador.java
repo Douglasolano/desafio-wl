@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.br.CPF;
@@ -28,9 +30,13 @@ public class Colaborador implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@NotBlank
+	@NotNull
 	private String nome;
-	@CPF(message="CPF informado é invalido!")
-	@Size(min=11,max=11,message="CPF informado é invalido!")
+	@NotBlank
+	@NotNull
+	@CPF(message="cpf informado é invalido")
+	@Size(min=11,max=11,message="deve conter 11 digitos")
 	private String cpf;
 	
 	@JsonIgnore
@@ -62,6 +68,11 @@ public class Colaborador implements Serializable {
 	public String getCpf() {
 		return cpf;
 	}
+	
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
+	
 	public List<Cafe> getCafes() {
 		return cafes;
 	}
@@ -81,6 +92,11 @@ public class Colaborador implements Serializable {
 			return false;
 		Colaborador other = (Colaborador) obj;
 		return Objects.equals(cpf, other.cpf) && Objects.equals(id, other.id);
+	}
+
+	@Override
+	public String toString() {
+		return "Colaborador [id=" + id + ", nome=" + nome + ", cpf=" + cpf + ", cafes=" + cafes + "]";
 	}
 
 	

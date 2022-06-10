@@ -1,0 +1,61 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8">
+	<meta content="width=device-width, initial-scale=1" name="viewport">
+
+	<!-- Bootstrap CSS -->
+	<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+		integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" rel="stylesheet">
+		
+	<link rel="stylesheet" href="/css/style.css">
+
+	<title>Novo Colaborador</title>
+</head>
+
+<body>
+	<header>
+		<div class="container mt-3">
+			<ul class="nav nav-tabs">
+				<li class="nav-item">
+					<a aria-current="page" class="nav-link"
+						th:classappend="${#httpServletRequest.getRequestURI().equals('/') ? 'active' : ''}"
+						href="/">Home</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link"
+						th:classappend="${#httpServletRequest.getRequestURI().startsWith('/colaboradores') ? 'active' : ''}"
+						href="/professores">Colaboradores</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/cafes">Cafes</a>
+				</li>
+			</ul>
+		</div>
+	</header>
+	<div class="container">
+		<div class="row">
+			<h1>Colaborador</h1>
+		</div>
+	</div>
+
+	<main>
+		<div class="container mt-4">
+			<div class="row">
+				<div class="col-12">
+					<b>Id:</b> <span th:text="${colaborador.id}"></span><br />
+					<b>Nome:</b> <span th:text="${colaborador.nome}"></span><br />
+					<b>Cpf:</b> <span th:text="${colaborador.cpf}"></span><br />
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<a href="/colaboradores">Voltar</a>
+				</div>
+			</div>
+		</div>
+	</main>
+</body>
+
+</html>

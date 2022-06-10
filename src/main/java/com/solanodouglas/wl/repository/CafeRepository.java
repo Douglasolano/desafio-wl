@@ -10,6 +10,6 @@ import com.solanodouglas.wl.model.Cafe;
 @Repository
 public interface CafeRepository extends JpaRepository<Cafe, Long>{
 
-	@Query("SELECT c FROM Cafe c WHERE c.cafe = :cafe")
-	Cafe findbyCafe(@Param("cafe") String cafe);
+	@Query("SELECT c FROM Cafe c WHERE c.nome = :nome")
+	Cafe findByNome(@Param("nome") String nome);
 }

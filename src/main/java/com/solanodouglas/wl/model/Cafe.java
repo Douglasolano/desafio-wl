@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 
 @Entity
@@ -20,8 +22,11 @@ public class Cafe implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String cafe;
+	@NotNull
+	@NotBlank
+	private String nome;
 	
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "colaborador_id")
 	private Colaborador colaborador;
@@ -29,10 +34,10 @@ public class Cafe implements Serializable{
 	public Cafe() {
 	}
 
-	public Cafe(Long id, String cafe, Colaborador colaborador) {
+	public Cafe(Long id, String nome, Colaborador colaborador) {
 		super();
 		this.id = id;
-		this.cafe = cafe;
+		this.nome = nome;
 		this.colaborador = colaborador;
 	}
 
@@ -44,12 +49,12 @@ public class Cafe implements Serializable{
 		this.id = id;
 	}
 
-	public String getCafe() {
-		return cafe;
+	public String getNome() {
+		return nome;
 	}
 
-	public void setCafe(String cafe) {
-		this.cafe = cafe;
+	public void setNome(String cafe) {
+		this.nome = cafe;
 	}
 
 	public Colaborador getColaborador() {
@@ -59,10 +64,11 @@ public class Cafe implements Serializable{
 	public void setColaborador(Colaborador colaborador) {
 		this.colaborador = colaborador;
 	}
+	
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(cafe, colaborador, id);
+		return Objects.hash(nome, colaborador, id);
 	}
 
 	@Override
@@ -74,7 +80,7 @@ public class Cafe implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Cafe other = (Cafe) obj;
-		return Objects.equals(cafe, other.cafe) && Objects.equals(colaborador, other.colaborador)
+		return Objects.equals(nome, other.nome) && Objects.equals(colaborador, other.colaborador)
 				&& Objects.equals(id, other.id);
 	}
 }

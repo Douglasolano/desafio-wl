@@ -30,7 +30,7 @@ public class CafeService {
 	}	
 	
 	public Cafe insert(Cafe cafe) {
-		if (repository.findbyCafe(cafe.getCafe()) == null) {
+		if (repository.findByNome(cafe.getNome()) == null) {
 			return repository.save(cafe);
 		} else {
 			throw new DatabaseException("Este café já foi escolhido por um colaborador.");
@@ -58,7 +58,7 @@ public class CafeService {
 	}
 
 	private void updateData(Cafe model, Cafe cafe, Colaborador colab) {
-		model.setCafe(cafe.getCafe());
+		model.setNome(cafe.getNome());
 		model.setColaborador(colab);
 	}
 }
