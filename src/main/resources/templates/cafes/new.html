@@ -51,6 +51,26 @@
 						<input class="form-control" th:errorclass="is-invalid" type="text" th:field="*{colaborador.id}">
 						<div class="invalid-feedback" th:errors="*{colaborador.id}"></div>
 					</div>
+					
+					<div class="row">
+						<div class="col-5">
+							<table class="table">
+							<thead>
+								<tr>
+									<th scope="col">ID</th>
+									<th scope="col">Nome</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="colaborador : ${colaboradores}">
+									<th class="col-1" scope="row" th:text="${colaborador.getId()}">ID</th>
+									<td class="col-4" th:text="${colaborador.nome}">Nome do Colaborador</td>			
+								</tr>
+							</tbody>
+							</table>
+						</div>
+					</div>
+					
 					<button class="btn btn-primary" type="submit">Inserir</button>
 					<a href="javascript:history.back()">Voltar</a>
 				</form>

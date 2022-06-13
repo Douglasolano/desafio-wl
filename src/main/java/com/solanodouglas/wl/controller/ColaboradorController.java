@@ -51,10 +51,14 @@ public class ColaboradorController {
 			return mv;
 		} else {
 			if (repository.findByCpf(colaborador.getCpf()) == null) {
+				ModelAndView mv = new ModelAndView("redirect:/colaboradores");
 				repository.save(colaborador);
-				return new ModelAndView("redirect:/colaboradores");
+				mv.addObject("mensagem", "Colaborador " + colaborador.getId() + " inserido com sucesso.");
+				return mv;
 			} else {
-				return new ModelAndView("redirect:/colaboradores");
+				ModelAndView mv = new ModelAndView("redirect:/colaboradores");
+				mv.addObject("mensagem", "Colaborador não inserido, cpf invalido.");
+				return mv;
 			}
 		}
 	}
@@ -103,7 +107,7 @@ public class ColaboradorController {
 			
 			ModelAndView mv = new ModelAndView("colaboradores/edit");
 			mv.addObject("colaboradorId", colaborador.getId());
-			
+			mv.addObject("mensagem", "Colaborador " + id + "atualizado com sucesso.");
 			return mv;
 		} else {
 			return new ModelAndView("redirect:/colaboradores");
@@ -112,6 +116,7 @@ public class ColaboradorController {
 	
 	@PostMapping("/colaboradores/{id}")
 	public ModelAndView update(@PathVariable Long id, @Valid RequisicaoFormColaborador requisicao, BindingResult bindingResult) {
+		ModelAndView mv = new ModelAndView("redirect:/colaboradores");
 		if (bindingResult.hasErrors()) {
 			return null;
 		} else {
@@ -120,10 +125,9 @@ public class ColaboradorController {
 			if (optional.isPresent()) {
 				Colaborador colaborador = requisicao.toColaborador(optional.get());
 				repository.save(colaborador);
-				
-				return new ModelAndView("redirect:/colaboradores");
+				return mv;
 			} else {
-				return new ModelAndView("redirect:/colaboradores");
+				return mv;
 			}
 		}
 	}

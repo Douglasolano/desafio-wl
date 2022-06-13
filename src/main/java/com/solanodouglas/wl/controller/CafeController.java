@@ -20,6 +20,7 @@ import com.solanodouglas.wl.model.Colaborador;
 import com.solanodouglas.wl.repository.CafeRepository;
 import com.solanodouglas.wl.repository.ColaboradorRepository;
 import com.solanodouglas.wl.service.CafeService;
+import com.solanodouglas.wl.service.ColaboradorService;
 import com.solanodouglas.wl.service.exceptions.DatabaseException;
 import com.solanodouglas.wl.service.exceptions.ModelNotFoundException;
 
@@ -35,6 +36,9 @@ public class CafeController {
 	@Autowired
 	private ColaboradorRepository colabRepository;
 	
+	@Autowired
+	private ColaboradorService colabService;
+	
 	@GetMapping("cafes")
 	public ModelAndView index() {
 		List<Cafe> cafes = service.findAll();
@@ -45,7 +49,9 @@ public class CafeController {
 	
 	@GetMapping("cafes/new")
 	public ModelAndView novo(Cafe cafe) {
+		List<Colaborador> colaboradores = colabService.findAll();
 		ModelAndView mv = new ModelAndView("cafes/new");
+		mv.addObject("colaboradores", colaboradores);
 		return mv;
 	}
 	
@@ -53,17 +59,22 @@ public class CafeController {
 	public ModelAndView insert(@Valid Cafe cafe, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			ModelAndView mv = new ModelAndView("cafes/new");
+			mv.addObject("mensagem", "Cafe não inserido.");
 			return mv;
 		} else {
 			if (repository.findByNome(cafe.getNome()) == null && cafe.getColaborador().getId() != null) {
 				Long aux =  cafe.getColaborador().getId(); 
 				Optional<Colaborador> optional = colabRepository.findById(aux);
+				ModelAndView mv = new ModelAndView("redirect:/cafes");
 				if (optional.isPresent()) {
+					mv.addObject("mensagem", "Cafe " + cafe.getId() + "inserido com sucesso.");
 					 service.insert(cafe);
 				 }
-				return new ModelAndView("redirect:/cafes");
+				return mv;
 			} else {
-				return new ModelAndView("redirect:/cafes");
+				ModelAndView mv = new ModelAndView("redirect:/cafes");
+				mv.addObject("mensagem", "Cafe não inserido.");
+				return mv;
 			}
 		}
 	}
