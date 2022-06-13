@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -41,7 +40,7 @@ public class Colaborador implements Serializable {
 	private String cpf;
 	
 	@JsonIgnore
-	@OneToMany(mappedBy = "colaborador", cascade = CascadeType.ALL , orphanRemoval = true)
+	@OneToMany(mappedBy = "colaborador")
 	private List<Cafe> cafes = new ArrayList<>();
 	
 	public Colaborador() {

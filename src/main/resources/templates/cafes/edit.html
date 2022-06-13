@@ -10,7 +10,7 @@
 		integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" rel="stylesheet">
 
 	<link rel="stylesheet" href="/css/style.css">
-	<title>Lista de Cafes</title>
+	<title>Editar Cafe</title>
 </head>
 
 <body>
@@ -29,48 +29,41 @@
 			</ul>
 		</div>
 	</header>
-
 	<div class="container">
 		<div class="row">
-			<h1>Lista de Cafes</h1>
-			<div class="container mb-4">
+			<h1>Editar Cafe</h1>
+		</div>
+		<div class="container mb-4">
 				<div ckass="col-12">
 					<span th:text="${param.mensagem != null ? param.mensagem : ''}">Mensagem</span>
 				</div>
 			</div>
+		<div class="container">
 			<div class="row">
-				<div class="col-12">
-					<table class="table table-hover">
-						<thead>
-							<tr>
-								<th scope="col">ID</th>
-								<th scope="col">Cafe</th>
-								<th scope="col">ID Colaborador</th>
-								<th scope="col">Nome</th>
-								<th scope="col">Cpf</th>
-								<th scope="col"></th>
-								<th scope="col"></th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="cafe : ${cafes}">
-								<th class="col-1" scope="row" th:text="${cafe.getId()}">ID</th>
-								<td class="col-4" th:text="${cafe.nome}">Nome do Cafe</td>
-								<td class="col-2" th:text="${cafe.colaborador.id}">ID colaborador</td>
-								<td class="col-4" th:text="${cafe.colaborador.nome}">Nome Colaborador</td>
-								<td class="col-4" th:text="${cafe.colaborador.cpf}">Cpf Colaborador</td>
-								<td class="col-1"><a 
-										th:href="@{/cafes/{cafeId}/edit(cafeId = ${cafe.id})}"></a>
-								<td class="col-1"><a
-										th:href="@{/cafes/{cafeId}/delete(cafeId = ${cafe.id})}">Deletar</a>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="row">
-				<a href="/cafes/new">Novo Cafe</a>
+				<form th:object="${requisicaoFormCafe}" th:action="@{/cafes/{cafeId}(cafeId = ${cafeId})}" method="POST">
+					<div class="mb-3">
+						<label class="form-label">Nome do Cafe</label>
+						<input class="form-control" th:errorclass="is-invalid" type="text" th:field="*{nome}">
+						<div class="invalid-feedback" th:errors="*{nome}"></div>
+					</div>
+					<div class="mb-3">
+						<label class="form-label">ID Colaborador</label>
+						<input class="form-control" th:errorclass="is-invalid" type="text" th:field="*{colaborador.id}">
+						<div class="invalid-feedback" th:errors="*{colaborador.id}"></div>
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Nome Colaborador</label>
+						<input class="form-control" th:errorclass="is-invalid" type="text" th:field="*{colaborador.nome}">
+						<div class="invalid-feedback" th:errors="*{colaborador.nome}"></div>
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Cpf Colaborador</label>
+						<input class="form-control" th:errorclass="is-invalid" type="text" th:field="*{colaborador.cpf}">
+						<div class="invalid-feedback" th:errors="*{colaborador.cpf}"></div>
+					</div>
+					<button class="btn btn-primary" type="submit">Editar</button>
+					<a href="javascript:history.back()">Voltar</a>
+				</form>
 			</div>
 		</div>
 

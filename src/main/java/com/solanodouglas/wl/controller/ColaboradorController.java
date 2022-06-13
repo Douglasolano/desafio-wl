@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.solanodouglas.wl.dto.RequisicaoFormColaborador;
 import com.solanodouglas.wl.model.Colaborador;
 import com.solanodouglas.wl.repository.ColaboradorRepository;
 import com.solanodouglas.wl.service.ColaboradorService;
@@ -91,4 +92,40 @@ public class ColaboradorController {
 		}
 		return mv;
 	}
-} 
+	
+	@GetMapping("/colaboradores/{id}/edit")
+	public ModelAndView edit(@PathVariable Long id, RequisicaoFormColaborador requisicao) {
+		Optional<Colaborador> optional = repository.findById(id);
+		
+		if (optional.isPresent()) {
+			Colaborador colaborador = optional.get();
+			requisicao.fromColaborador(colaborador);
+			
+			ModelAndView mv = new ModelAndView("colaboradores/edit");
+			mv.addObject("colaboradorId", colaborador.getId());
+			
+			return mv;
+		} else {
+			return new ModelAndView("redirect:/colaboradores");
+		}
+	}
+	
+	@PostMapping("/colaboradores/{id}")
+	public ModelAndView update(@PathVariable Long id, @Valid RequisicaoFormColaborador requisicao, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return null;
+		} else {
+			Optional<Colaborador> optional = repository.findById(id);
+			
+			if (optional.isPresent()) {
+				Colaborador colaborador = requisicao.toColaborador(optional.get());
+				repository.save(colaborador);
+				
+				return new ModelAndView("redirect:/colaboradores");
+			} else {
+				return new ModelAndView("redirect:/colaboradores");
+			}
+		}
+	}
+}
+

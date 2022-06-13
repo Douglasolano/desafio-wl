@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.solanodouglas.wl.dto.RequisicaoFormCafe;
+import com.solanodouglas.wl.dto.RequisicaoFormColaborador;
 import com.solanodouglas.wl.model.Cafe;
 import com.solanodouglas.wl.model.Colaborador;
 import com.solanodouglas.wl.repository.CafeRepository;
@@ -81,5 +83,40 @@ public class CafeController {
 			mv.addObject("mensagem", "Cafe " + id + " não pode ser deletado por conter café(s) em seu nome");
 		}
 		return mv;
+	}
+	
+	@GetMapping("/cafes/{id}/edit")
+	public ModelAndView edit(@PathVariable Long id, RequisicaoFormCafe requisicao) {
+		Optional<Cafe> optional = repository.findById(id);
+		
+		if (optional.isPresent()) {
+			Cafe cafe = optional.get();
+			requisicao.fromCafe(cafe);
+			
+			ModelAndView mv = new ModelAndView("cafes/edit");
+			mv.addObject("cafeId", cafe.getId());
+			
+			return mv;
+		} else {
+			return new ModelAndView("redirect:/cafes");
+		}
+	}
+	
+	@PostMapping("/cafes/{id}")
+	public ModelAndView update(@PathVariable Long id, @Valid RequisicaoFormColaborador requisicao, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return null;
+		} else {
+			Optional<Cafe> optional = repository.findById(id);
+			
+			if (optional.isPresent()) {
+				Cafe cafe = requisicao.toCafe(optional.get());
+				repository.save(cafe);
+				
+				return new ModelAndView("redirect:/cafes");
+			} else {
+				return new ModelAndView("redirect:/cafes");
+			}
+		}
 	}
 }
