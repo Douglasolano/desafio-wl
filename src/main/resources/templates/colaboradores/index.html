@@ -60,9 +60,11 @@
 								<td class="col-1"><a
 										th:href="@{/colaboradores/{colaboradorId}(colaboradorId = ${colaborador.id})}">Detalhes</a>
 								</td>
+								<td class="col-1"><a 
+										th:href="@{/colaboradores/{colaboradorId}/edit(colaboradorId = ${colaborador.id})}">Editar</a>
 								<td class="col-1"><a
 										th:href="@{/colaboradores/{colaboradorId}/delete(colaboradorId = ${colaborador.id})}">Deletar</a>
-								</td>
+								</td>				
 							</tr>
 						</tbody>
 					</table>

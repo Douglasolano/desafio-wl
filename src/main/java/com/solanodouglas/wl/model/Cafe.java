@@ -26,7 +26,6 @@ public class Cafe implements Serializable{
 	@NotBlank
 	private String nome;
 	
-	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "colaborador_id")
 	private Colaborador colaborador;
