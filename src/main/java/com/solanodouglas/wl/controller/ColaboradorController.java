@@ -56,7 +56,7 @@ public class ColaboradorController {
 				mv.addObject("mensagem", "Colaborador " + colaborador.getId() + " inserido com sucesso.");
 				return mv;
 			} else {
-				ModelAndView mv = new ModelAndView("redirect:/colaboradores");
+				ModelAndView mv = new ModelAndView("redirect:/colaboradores/new");
 				mv.addObject("mensagem", "Colaborador não inserido, cpf invalido.");
 				return mv;
 			}

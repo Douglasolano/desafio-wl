@@ -67,12 +67,16 @@ public class CafeController {
 				Optional<Colaborador> optional = colabRepository.findById(aux);
 				ModelAndView mv = new ModelAndView("redirect:/cafes");
 				if (optional.isPresent()) {
-					mv.addObject("mensagem", "Cafe " + cafe.getId() + "inserido com sucesso.");
-					 service.insert(cafe);
+					mv.addObject("mensagem", "Cafe inserido com sucesso.");
+					service.insert(cafe);
+					return mv;
+				 } else {
+					 ModelAndView mv2 = new ModelAndView("redirect:/cafes/new");
+					 mv2.addObject("mensagem", "Cafe não inserido, id invalido.");
+					 return mv2;
 				 }
-				return mv;
 			} else {
-				ModelAndView mv = new ModelAndView("redirect:/cafes");
+				ModelAndView mv = new ModelAndView("redirect:/cafes/new");
 				mv.addObject("mensagem", "Cafe não inserido.");
 				return mv;
 			}
